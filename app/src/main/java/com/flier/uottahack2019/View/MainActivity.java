@@ -53,7 +53,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import com.flier.uottahack2019.GoogleCloudService.CalendarService
+import com.flier.uottahack2019.GoogleCloudService.CalendarService;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
