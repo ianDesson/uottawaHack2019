@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getTextFromImage(BitmapFactory.decodeResource(getResources(), R.drawable.test_poster_3));
+//        getTextFromImage(BitmapFactory.decodeResource(getResources(), R.drawable.test_poster_3));
     }
 
     private void openCamera() {
