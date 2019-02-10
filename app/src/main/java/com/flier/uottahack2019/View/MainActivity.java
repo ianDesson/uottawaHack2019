@@ -1,5 +1,9 @@
 package com.flier.uottahack2019.View;
 
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
 import com.flier.uottahack2019.R;
 
 import android.Manifest;
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     .setRequestedFps(2.0f)
                     .build();
 
-             /**
+            /**
              * Add call back to SurfaceView and check if camera permission is granted.
              * If permission is granted we can start our cameraSource and pass it to surfaceView
              **/
@@ -123,13 +127,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
-                    if (items.size() != 0 ){
+                    if (items.size() != 0) {
 
                         mTextView.post(new Runnable() {
                             @Override
                             public void run() {
                                 StringBuilder stringBuilder = new StringBuilder();
-                                for(int i=0;i<items.size();i++){
+                                for (int i = 0; i < items.size(); i++) {
                                     TextBlock item = items.valueAt(i);
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
