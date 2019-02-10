@@ -122,7 +122,7 @@ public class CalendarService {
      * @param endDate       Event end time
      * @throws IOException
      */
-    void insertEvent(String summary, String des, DateTime startDate, DateTime endDate) throws IOException {
+    public void insertEvent(String summary, String des, DateTime startDate, DateTime endDate) throws IOException {
         Event event = new Event()
                 .setSummary(summary)
                 .setDescription(des);
@@ -148,7 +148,7 @@ public class CalendarService {
             mService.events().insert(calendarId, event).setSendNotifications(true).execute();
     }
 
-    void insertEvent(String summary, DateTime startDate, DateTime endDate) throws IOException {
+    public void insertEvent(String summary, DateTime startDate, DateTime endDate) throws IOException {
         Event event = new Event()
                 .setSummary(summary);
         EventDateTime start = new EventDateTime()
@@ -173,7 +173,7 @@ public class CalendarService {
             mService.events().insert(calendarId, event).setSendNotifications(true).execute();
     }
 
-    void insertEvent(String summary, DateTime startDate) throws IOException {
+    public void insertEvent(String summary, DateTime startDate) throws IOException {
         Event event = new Event()
                 .setSummary(summary);
         EventDateTime start = new EventDateTime()
