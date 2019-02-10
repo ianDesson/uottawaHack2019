@@ -45,14 +45,14 @@ public class CalendarService {
 
     private com.google.api.services.calendar.Calendar mService = null;
 
-    public CalendarService(GoogleAccountCredential credential) throws GeneralSecurityException, IOException{
+    public CalendarService() throws GeneralSecurityException, IOException{
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         mService = new com.google.api.services.calendar.Calendar.Builder(
-                transport, jsonFactory, credential)
+                transport, jsonFactory, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("Google Calendar API Android Quickstart")
                 .build();
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
