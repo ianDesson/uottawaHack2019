@@ -40,16 +40,20 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.api.client.util.DateTime;
+import com.joestelmach.natty.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import com.joestelmach.natty.*;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import com.flier.uottahack2019.GoogleCloudService.CalendarService
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -93,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        getTextFromImage(BitmapFactory.decodeResource(getResources(), R.drawable.test_poster_3));
     }
 
     private void openCamera() {
@@ -104,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
-
-        getTextFromImage(BitmapFactory.decodeResource(getResources(), R.drawable.test_poster_3));
     }
 
     //handling permission results
@@ -128,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             //Set the image captured to ImageView
             imageView.setImageURI(image_uri);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
+                getTextFromImage(bitmap);
+            } catch (java.io.IOException e) {
+                Log.e(TAG, "Failed to create bitmap: ", e);
+            }
         }
     }
 
@@ -176,11 +186,19 @@ public class MainActivity extends AppCompatActivity {
 
         Parser parser = new Parser();
         List<DateGroup> groups = parser.parse(text);
-        for (DateGroup group : groups) {
-            Log.d(TAG, "DATEGROUP");
-            List<Date> dates = group.getDates();
-            for (Date date : dates) {
-                Log.d(TAG, date.toString());
+        if (!groups.isEmpty()) {
+            List<Date> dates = new ArrayList<>();
+            for (DateGroup group : groups) {
+                Log.d(TAG, "DATEGROUP");
+                dates.addAll(group.getDates());
+            }
+
+            DateTime dateTime = new DateTime(dates.get(0));
+            try {
+                CalendarService calendarService = new CalendarService();
+                calendarService.insertEvent(title, dateTime);
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
             }
         }
     }
