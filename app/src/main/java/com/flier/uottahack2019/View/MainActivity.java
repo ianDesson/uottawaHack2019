@@ -193,7 +193,9 @@ public class MainActivity extends AppCompatActivity {
                 dates.addAll(group.getDates());
             }
 
-            DateTime dateTime = new DateTime(dates.get(0));
+            Date date = dates.get(0);
+            Toast.makeText(this, title + ", " + date, Toast.LENGTH_LONG).show();
+            DateTime dateTime = new DateTime(date);
             try {
                 CalendarService calendarService = new CalendarService();
                 calendarService.insertEvent(title, dateTime);
@@ -201,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Failed to create event: ", e);
             }
         } else {
+            Toast.makeText(this, "No date found", Toast.LENGTH_LONG).show();
             Log.d(TAG, "No date found");
         }
     }
