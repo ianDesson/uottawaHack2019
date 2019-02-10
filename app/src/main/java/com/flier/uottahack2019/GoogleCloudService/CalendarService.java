@@ -132,7 +132,7 @@ public class CalendarService {
         event.setStart(start);
                 EventDateTime end = new EventDateTime()
                 .setDateTime(endDate)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Toronto");
                 event.setEnd(end);
         EventReminder[] reminderOverrides = new EventReminder[] {
                 new EventReminder().setMethod("email").setMinutes(24 * 60),
@@ -157,7 +157,7 @@ public class CalendarService {
         event.setStart(start);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDate)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Toronto");
         event.setEnd(end);
         EventReminder[] reminderOverrides = new EventReminder[] {
                 new EventReminder().setMethod("email").setMinutes(24 * 60),
@@ -181,7 +181,7 @@ public class CalendarService {
                 .setTimeZone("America/Toronto");
         event.setStart(start);
         EventDateTime end = new EventDateTime()
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Toronto");
         event.setEnd(end);
         EventReminder[] reminderOverrides = new EventReminder[] {
                 new EventReminder().setMethod("email").setMinutes(24 * 60),
