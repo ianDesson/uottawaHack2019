@@ -198,8 +198,10 @@ public class MainActivity extends AppCompatActivity {
                 CalendarService calendarService = new CalendarService();
                 calendarService.insertEvent(title, dateTime);
             } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
+                Log.e(TAG, "Failed to create event: ", e);
             }
+        } else {
+            Log.d(TAG, "No date found");
         }
     }
 }
