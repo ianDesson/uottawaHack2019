@@ -148,4 +148,54 @@ public class CalendarService {
             mService.events().insert(calendarId, event).setSendNotifications(true).execute();
     }
 
+    void insertEvent(String summary, DateTime startDate, DateTime endDate) throws IOException {
+        Event event = new Event()
+                .setSummary(summary);
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDate)
+                .setTimeZone("America/Toronto");
+        event.setStart(start);
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDate)
+                .setTimeZone("America/Los_Angeles");
+        event.setEnd(end);
+        EventReminder[] reminderOverrides = new EventReminder[] {
+                new EventReminder().setMethod("email").setMinutes(24 * 60),
+                new EventReminder().setMethod("popup").setMinutes(10),
+        };
+        Event.Reminders reminders = new Event.Reminders()
+                .setUseDefault(false)
+                .setOverrides(Arrays.asList(reminderOverrides));
+        event.setReminders(reminders);
+        String calendarId = "primary";
+        //event.send
+        if(mService!=null)
+            mService.events().insert(calendarId, event).setSendNotifications(true).execute();
+    }
+
+    void insertEvent(String summary, DateTime startDate) throws IOException {
+        Event event = new Event()
+                .setSummary(summary);
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDate)
+                .setTimeZone("America/Toronto");
+        event.setStart(start);
+        EventDateTime end = new EventDateTime()
+                .setTimeZone("America/Los_Angeles");
+        event.setEnd(end);
+        EventReminder[] reminderOverrides = new EventReminder[] {
+                new EventReminder().setMethod("email").setMinutes(24 * 60),
+                new EventReminder().setMethod("popup").setMinutes(10),
+        };
+        Event.Reminders reminders = new Event.Reminders()
+                .setUseDefault(false)
+                .setOverrides(Arrays.asList(reminderOverrides));
+        event.setReminders(reminders);
+        String calendarId = "primary";
+        //event.send
+        if(mService!=null)
+            mService.events().insert(calendarId, event).setSendNotifications(true).execute();
+    }
+
+
 }
