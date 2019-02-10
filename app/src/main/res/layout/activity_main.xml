@@ -7,22 +7,19 @@
     android:weightSum="5"
     tools:context="com.flier.uottahack2019.View.MainActivity">
 
-    <SurfaceView
-        android:id="@+id/surfaceView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4" />
 
-    <TextView
-        android:id="@+id/text_view"
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="400dp"
+        android:layout_height="518dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_center_focus_strong_black_24dp" />
+
+    <Button
+        android:id="@+id/button_picture"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:text="@string/txt_message"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:layout_height="67dp"
+        android:text="@string/button_picture"
+        tools:context=".MainActivity" />
 
 </LinearLayout>
