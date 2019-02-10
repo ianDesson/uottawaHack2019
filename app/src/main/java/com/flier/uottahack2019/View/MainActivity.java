@@ -12,6 +12,8 @@ import com.flier.uottahack2019.R;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -32,6 +36,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.joestelmach.natty.*;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mCameraView = findViewById(R.id.surfaceView);
         mTextView = findViewById(R.id.text_view);
 
+        getTextFromImage(BitmapFactory.decodeResource(getResources(), R.drawable.test_poster_3));
         startCameraSource();
     }
 
@@ -174,5 +184,39 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    private void getTextFromImage(Bitmap bitmap) {
+        Log.d(TAG, "Extracting text...");
+        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+        SparseArray<TextBlock> textBlocks = textRecognizer.detect(frame);
+        String title = "";
+        String text = "";
+        int maxHeight = 0;
+        for (int i = 0; i < textBlocks.size(); i++) {
+            TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
+            Log.d(TAG, textBlock.getValue());
+            List<? extends Text> lines = textBlock.getComponents();
+            int height = lines.get(0).getBoundingBox().height();
+            Log.d(TAG, "Height: " + String.valueOf(height));
+            if (height > maxHeight) {
+                maxHeight = height;
+                for (int j = 0; j < lines.size(); j++) {
+                    title += " " + lines.get(j).getValue();
+                }
+            }
+            text += " " + textBlock.getValue();
+        }
+        Log.d(TAG, title);
+        Log.d(TAG, text);
 
+        Parser parser = new Parser();
+        List<DateGroup> groups = parser.parse(text);
+        for (DateGroup group : groups) {
+            Log.d(TAG, "DATEGROUP");
+            List<Date> dates = group.getDates();
+            for (Date date : dates) {
+                Log.d(TAG, date.toString());
+            }
+        }
+    }
 }
