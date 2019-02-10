@@ -1,5 +1,13 @@
 package com.flier.uottahack2019.View;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
 import com.flier.uottahack2019.R;
 
 import android.Manifest;
@@ -9,6 +17,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,15 +36,26 @@ import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import com.joestelmach.natty.*;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
@@ -83,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
+
+        getTextFromImage(BitmapFactory.decodeResource(getResources(), R.drawable.test_poster_3));
     }
 
     //handling permission results
@@ -102,9 +125,63 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             //Set the image captured to ImageView
             imageView.setImageURI(image_uri);
+        }
+    }
+
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void getTextFromImage(Bitmap bitmap) {
+        Log.d(TAG, "Extracting text...");
+        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+        SparseArray<TextBlock> textBlocks = textRecognizer.detect(frame);
+        String title = "";
+        String text = "";
+        int maxHeight = 0;
+        for (int i = 0; i < textBlocks.size(); i++) {
+            TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
+            Log.d(TAG, textBlock.getValue());
+            List<? extends Text> lines = textBlock.getComponents();
+            int height = lines.get(0).getBoundingBox().height();
+            Log.d(TAG, "Height: " + String.valueOf(height));
+            if (height > maxHeight) {
+                maxHeight = height;
+                for (int j = 0; j < lines.size(); j++) {
+                    title += " " + lines.get(j).getValue();
+                }
+            }
+            text += " " + textBlock.getValue();
+        }
+        Log.d(TAG, title);
+        Log.d(TAG, text);
+
+        Parser parser = new Parser();
+        List<DateGroup> groups = parser.parse(text);
+        for (DateGroup group : groups) {
+            Log.d(TAG, "DATEGROUP");
+            List<Date> dates = group.getDates();
+            for (Date date : dates) {
+                Log.d(TAG, date.toString());
+            }
         }
     }
 }
