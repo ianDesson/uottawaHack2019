@@ -1,4 +1,9 @@
 <resources>
+
+    <string name="txt_message">No Text Available</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+
     <string name="app_name">uottaHack2019</string>
     <string name="API_KEY">AIzaSyBRI6jU8iH7AVA1qAedeHDk-Jr8KC737JE</string>
+
 </resources>
